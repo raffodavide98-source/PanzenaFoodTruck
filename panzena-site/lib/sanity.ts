@@ -13,7 +13,7 @@ function getClient(): SanityClient {
       projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
       dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
       apiVersion: '2024-01-01',
-      useCdn: true,
+      useCdn: false,
     })
   }
   return client
@@ -23,6 +23,7 @@ export type Dish = {
   name: string
   description?: string
   price: number
+  imageUrl?: string // Aggiungiamo l'URL dell'immagine opzionale
 }
 
 export type MenuCategory = {
@@ -51,18 +52,31 @@ function sanityConfigured() {
   )
 }
 
+// Funzione per fare un dump completo di TUTTI i documenti presenti su Sanity
+export async function getAllSanityData(): Promise<any[]> {
+  if (!sanityConfigured()) return []
+  
+  // Questa query prende letteralmente QUALSIASI documento che non sia un sistema interno di Sanity
+  return getClient().fetch(`*[!(_id in path("system.**"))]`)
+}
+
 export async function getMenu(): Promise<MenuCategory[]> {
   if (!sanityConfigured()) return []
+  // Modificata la query per puntare direttamente a category._ref e recuperare l'url dell'immagine
   return getClient().fetch(`*[_type == "menuCategory"] | order(order asc){
     title,
-    "dishes": *[_type == "dish" && references(^._id) && available == true]{
-      name, description, price
+    "dishes": *[_type == "dish" && category._ref == ^._id && available == true]{
+      name, 
+      description, 
+      price,
+      "imageUrl": photo.asset->url
     }
   }`)
 }
 
 export async function getEvents(): Promise<EventItem[]> {
   if (!sanityConfigured()) return []
+  // Rimosso il controllo stringente se crea conflitti, lasciando il filtro visible
   return getClient().fetch(`*[_type == "event" && visible == true] | order(date asc){
     title, date, startTime, endTime, location, type
   }`)

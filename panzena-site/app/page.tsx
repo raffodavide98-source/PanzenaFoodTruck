@@ -1,8 +1,10 @@
-import { getMenu, getEvents } from '@/lib/sanity'
+import { getMenu, getEvents, getAllSanityData } from '@/lib/sanity'
 import ContactForm from '@/components/ContactForm'
 
 export default async function HomePage() {
-  const [menu, events] = await Promise.all([getMenu(), getEvents()])
+  const [menu, events, allData] = await Promise.all([getMenu(), getEvents(), getAllSanityData()])
+  console.log("STRUTTURA DATI MENU DA SANITY:", JSON.stringify(menu, null, 2))
+  console.log("STRUTTURA DATI EVENTI DA SANITY:", JSON.stringify(events, null, 2))
 
   return (
     <main>
@@ -43,23 +45,52 @@ export default async function HomePage() {
       <section id="menu" className="bg-navy2 px-8 py-20 text-cream">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-10 font-display text-3xl font-bold">Il menù</h2>
-          {menu.length === 0 && (
+          
+          {menu.length === 0 || menu.every(c => c.dishes.length === 0) ? (
             <p className="text-cream/60">
-              Nessun dato dal CMS ancora — collega Sanity per vedere qui il menù reale
-              (vedi README). Nel frattempo il layout è comunque testabile.
+              Nessun piatto disponibile nel menù in questo momento.
             </p>
-          )}
+          ) : null}
+
           <div className="grid gap-6 md:grid-cols-3">
             {menu.map((cat) => (
-              <div key={cat.title} className="rounded-2xl bg-navy p-6">
-                <h3 className="mb-4 font-display text-lg text-sun">{cat.title}</h3>
-                {cat.dishes.map((dish) => (
-                  <div key={dish.name} className="mb-3 flex justify-between gap-3">
-                    <span className="text-sm">{dish.name}</span>
-                    <span className="whitespace-nowrap text-sm text-sea">€ {dish.price}</span>
+              // Mostra la categoria solo se ha effettivamente dei piatti dentro
+              cat.dishes.length > 0 && (
+                <div key={cat.title} className="rounded-2xl bg-navy p-6 flex flex-col justify-between">
+                  <div>
+                    <h3 className="mb-6 font-display text-xl font-bold text-sun border-b border-cream/10 pb-2">
+                      {cat.title}
+                    </h3>
+                    
+                    <div className="flex flex-col gap-6">
+                      {cat.dishes.map((dish) => (
+                        <div key={dish.name} className="flex flex-col gap-2">
+                          {/* Se c'è l'immagine del piatto, la stampiamo qui */}
+                          {dish.imageUrl && (
+                            <img 
+                              src={dish.imageUrl} 
+                              alt={dish.name} 
+                              className="w-full h-32 object-cover rounded-xl mb-1"
+                            />
+                          )}
+                          
+                          <div className="flex justify-between items-start gap-3">
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-base">{dish.name}</span>
+                              {dish.description && (
+                                <span className="text-xs text-cream/70 mt-0.5">{dish.description}</span>
+                              )}
+                            </div>
+                            <span className="whitespace-nowrap font-mono text-sm text-sea bg-sea/10 px-2 py-0.5 rounded">
+                              € {dish.price.toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              )
             ))}
           </div>
         </div>
