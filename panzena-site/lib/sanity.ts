@@ -62,16 +62,20 @@ export async function getAllSanityData(): Promise<any[]> {
 
 export async function getMenu(): Promise<MenuCategory[]> {
   if (!sanityConfigured()) return []
-  // Modificata la query per puntare direttamente a category._ref e recuperare l'url dell'immagine
-  return getClient().fetch(`*[_type == "menuCategory"] | order(order asc){
-    title,
-    "dishes": *[_type == "dish" && category._ref == ^._id && available == true]{
-      name, 
-      description, 
-      price,
-      "imageUrl": photo.asset->url
-    }
-  }`)
+  
+  return getClient().fetch(
+    `*[_type == "menuCategory"] | order(order asc){
+      title,
+      "dishes": *[_type == "dish" && category._ref == ^._id && available == true]{
+        name, 
+        description, 
+        price,
+        "imageUrl": photo.asset->url
+      }
+    }`,
+    {}, // Parametri vuoti
+    { cache: 'no-store' } // 🌟 Forza Next.js a non salvare in cache questa richiesta
+  )
 }
 
 export async function getEvents(): Promise<EventItem[]> {
