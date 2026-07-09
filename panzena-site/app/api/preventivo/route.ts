@@ -9,6 +9,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Campi mancanti' }, { status: 400 })
   }
 
+  console.log("Sanity project ID:", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID);
+
   // Se RESEND_API_KEY non è configurata, logga soltanto: utile per
   // testare il form in locale senza aver ancora un account Resend.
   if (!process.env.RESEND_API_KEY) {
