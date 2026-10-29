@@ -2,8 +2,15 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Panzena — Food Truck & Catering',
-  description: 'Lo street food che ti riempie il cuore e la panza. Panuozzi, panzerotti e catering a Chiavari e nel Tigullio.',
+  title: 'Panzena — Food Truck & Catering a Chiavari e nel Tigullio',
+  description:
+    'Lo street food che ti riempie il cuore e la panza. Panuozzi, panzerotti e pizza a portafoglio: food truck e catering per feste, matrimoni ed eventi aziendali.',
+  openGraph: {
+    title: 'Panzena — Food Truck & Catering',
+    description: 'Panuozzi, panzerotti e catering per eventi a Chiavari e nel Tigullio.',
+    locale: 'it_IT',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
