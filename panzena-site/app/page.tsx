@@ -1,5 +1,4 @@
 import { getSiteSettings, getMenu, getEvents, getTestimonials } from '@/lib/sanity'
-import { SAMPLE_TESTIMONIALS } from '@/lib/defaults'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import Highlights from '@/components/Highlights'
@@ -35,7 +34,7 @@ export default async function HomePage() {
       <Menu menu={menu} pdfUrl={settings.menuPdfUrl} />
       <About settings={settings} />
       <Gallery images={galleryImages} />
-      <Testimonials items={testimonials.length > 0 ? testimonials : SAMPLE_TESTIMONIALS} />
+      <Testimonials items={testimonials} />
       <Events events={events} />
       <Contact settings={settings} />
       <Footer settings={settings} />

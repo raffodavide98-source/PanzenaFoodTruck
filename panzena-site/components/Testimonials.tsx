@@ -1,6 +1,8 @@
 import type { Testimonial } from '@/lib/sanity'
 
 export default function Testimonials({ items }: { items: Testimonial[] }) {
+  if (items.length === 0) return null
+
   return (
     <section id="recensioni" className="bg-navy px-6 py-20 text-cream md:px-8 md:py-28">
       <div className="mx-auto max-w-6xl">
