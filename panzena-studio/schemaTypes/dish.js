@@ -1,7 +1,8 @@
 export default {
   name: 'dish',
-  title: 'Piatto',
+  title: 'Piatto famoso',
   type: 'document',
+  description: 'Sul sito compaiono i primi 6 piatti visibili, in base all’ordine.',
   fields: [
     {
       name: 'name',
@@ -10,23 +11,17 @@ export default {
       validation: Rule => Rule.required(),
     },
     {
-      name: 'category',
-      title: 'Categoria',
-      type: 'reference',
-      to: [{ type: 'menuCategory' }],
-      validation: Rule => Rule.required(),
-    },
-    {
       name: 'description',
       title: 'Descrizione breve',
       type: 'string',
-      description: 'Es: ingredienti principali, max 1 riga',
+      description: 'Ingredienti principali, max 1 riga',
     },
     {
       name: 'price',
       title: 'Prezzo (€)',
       type: 'number',
-      validation: Rule => Rule.required().positive(),
+      description: 'Facoltativo: se vuoto il prezzo non viene mostrato',
+      validation: Rule => Rule.positive(),
     },
     {
       name: 'photo',
@@ -35,27 +30,28 @@ export default {
       options: { hotspot: true },
     },
     {
-      name: 'available',
-      title: 'Disponibile in menù',
+      name: 'order',
+      title: 'Ordine di visualizzazione',
+      type: 'number',
+      description: 'Numero più basso = mostrato prima',
+      initialValue: 10,
+    },
+    {
+      name: 'visible',
+      title: 'Visibile sul sito',
       type: 'boolean',
       initialValue: true,
       description: 'Disattiva per nascondere temporaneamente senza cancellare il piatto',
     },
+  ],
+  orderings: [
     {
-      name: 'tags',
-      title: 'Etichette',
-      type: 'array',
-      of: [{ type: 'string' }],
-      options: {
-        list: [
-          { title: 'Vegetariano', value: 'vegetariano' },
-          { title: 'Piccante', value: 'piccante' },
-          { title: 'Novità', value: 'novita' },
-        ],
-      },
+      title: 'Ordine di visualizzazione',
+      name: 'orderAsc',
+      by: [{ field: 'order', direction: 'asc' }],
     },
   ],
   preview: {
-    select: { title: 'name', subtitle: 'category.title', media: 'photo' },
+    select: { title: 'name', subtitle: 'description', media: 'photo' },
   },
 }

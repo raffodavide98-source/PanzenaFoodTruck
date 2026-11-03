@@ -1,5 +1,4 @@
 import { createClient, type SanityClient } from '@sanity/client'
-import { DEFAULT_SETTINGS, type Highlight, type Step } from './defaults'
 import { todayInRome } from './format'
 
 let client: SanityClient | null = null
@@ -24,28 +23,41 @@ function getClient(): SanityClient {
 // Le pagine si aggiornano da sole ogni 60 secondi dopo una modifica in Sanity.
 const REVALIDATE = { next: { revalidate: 60 } }
 
-async function safeFetch<T>(query: string, params: Record<string, unknown>, fallback: T): Promise<T> {
-  if (!sanityConfigured()) return fallback
+async function safeFetch<T>(
+  contentType: string,
+  query: string,
+  params: Record<string, unknown>,
+  fallback: T,
+  filters: string,
+): Promise<T> {
+  if (!sanityConfigured()) {
+    console.warn(`[Sanity] ${contentType}: project ID non configurato; impossibile recuperare i record.`)
+    return fallback
+  }
+
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+
   try {
     const result = await getClient().fetch<T>(query, params, REVALIDATE)
-    return result ?? fallback
+    const data = result ?? fallback
+    const count = Array.isArray(data) ? data.length : undefined
+
+    if (count === 0) {
+      console.warn(`[Sanity] ${contentType}: 0 record ricevuti (project ${projectId}, dataset ${dataset}; filtri: ${filters}).`)
+    } else {
+      console.info(`[Sanity] ${contentType}: ${count ?? 'risultato'} record ricevuti (project ${projectId}, dataset ${dataset}).`)
+    }
+
+    return data
   } catch (err) {
-    console.error('Errore Sanity:', err)
+    console.error(`[Sanity] Errore durante il recupero di ${contentType} (project ${projectId}, dataset ${dataset}):`, err)
     return fallback
   }
 }
 
 /* ---------- Tipi ---------- */
 
-export type Dish = {
-  name: string
-  description?: string
-  price: number
-  imageUrl?: string
-  tags?: string[]
-}
-
-export type MenuCategory = { title: string; dishes: Dish[] }
 
 export type EventItem = {
   title: string
@@ -53,121 +65,72 @@ export type EventItem = {
   startTime?: string
   endTime?: string
   location: string
-  type: 'tappa' | 'catering'
 }
 
-export type GalleryImage = { url: string; alt?: string; caption?: string }
+/* ---------- Query ---------- */
 
-export type Testimonial = { author: string; eventType?: string; text: string; isSample?: boolean }
+// Piatti più famosi: solo quelli visibili, in ordine, massimo 6.
+export function getDishes(): Promise<Dish[]> {
+  return safeFetch<Dish[]>(
+    'piatti famosi',
+    `*[_type == "dish" && visible == true] | order(order asc, _createdAt asc)[0...6]{
+      name, description, price,
+      "imageUrl": photo.asset->url
+    }`,
+    {},
+    [],
+    'visible == true, massimo 6 risultati',
+  )
+}
 
 export type SiteSettings = {
-  heroTitle: string
-  heroSubtitle: string
-  heroImageUrl?: string
-  phone: string
-  email: string
-  serviceArea: string
-  highlights: Highlight[]
-  cateringIntro: string
-  cateringSteps: Step[]
-  cateringIncluded: string[]
-  aboutTitle: string
-  aboutText: string
-  aboutImageUrl?: string
-  gallery: GalleryImage[]
-  menuPdfUrl: string
-  instagramUrl?: string
-  facebookUrl?: string
-  legalName?: string
-  vatNumber?: string
-}
+  cateringIntro: string;
+  cateringIncluded: string[];
+  menuPdfUrl: string;
+  cateringSteps: { title: string; text: string }[];
+  heroImageUrl: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  // aggiungi qui altre proprietà che usi in altri componenti
+};
 
-/* ---------- Impostazioni sito ---------- */
+export type GalleryImage = {
+  url: string;
+  alt?: string;
+  caption?: string;
+};
 
-type RawSettings = Partial<Omit<SiteSettings, 'gallery'>> & {
-  gallery?: (GalleryImage | null)[] | null
-} | null
+export type Dish = {
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  price: number;
+  tags?: string[];
+};
 
-const nonEmpty = <T,>(arr: T[] | null | undefined, fallback: T[]) => (arr && arr.length > 0 ? arr : fallback)
-const text = (v: string | null | undefined, fallback: string) => (v && v.trim() ? v : fallback)
+export type MenuCategory = {
+  title: string;
+  dishes: Dish[];
+};
 
-export async function getSiteSettings(): Promise<SiteSettings> {
-  const raw = await safeFetch<RawSettings>(
-    `*[_type == "siteSettings"][0]{
-      heroTitle, heroSubtitle,
-      "heroImageUrl": heroImage.asset->url,
-      phone, email, serviceArea,
-      highlights[]{title, text},
-      cateringIntro,
-      cateringSteps[]{title, text},
-      cateringIncluded,
-      aboutTitle, aboutText,
-      "aboutImageUrl": aboutImage.asset->url,
-      "gallery": gallery[]{ "url": asset->url, alt, caption },
-      "menuPdfUrl": menuPdf.asset->url,
-      instagramUrl, facebookUrl, legalName, vatNumber
-    }`,
-    {},
-    null,
-  )
+export type Testimonial = {
+  author: string;
+  text: string;
+  eventType?: string;
+  isSample?: boolean;
+};
 
-  const d = DEFAULT_SETTINGS
-  return {
-    heroTitle: text(raw?.heroTitle, d.heroTitle),
-    heroSubtitle: text(raw?.heroSubtitle, d.heroSubtitle),
-    heroImageUrl: raw?.heroImageUrl || undefined,
-    phone: text(raw?.phone, d.phone),
-    email: text(raw?.email, d.email),
-    serviceArea: text(raw?.serviceArea, d.serviceArea),
-    highlights: nonEmpty(raw?.highlights, d.highlights),
-    cateringIntro: text(raw?.cateringIntro, d.cateringIntro),
-    cateringSteps: nonEmpty(raw?.cateringSteps, d.cateringSteps),
-    cateringIncluded: nonEmpty(raw?.cateringIncluded, d.cateringIncluded),
-    aboutTitle: text(raw?.aboutTitle, d.aboutTitle),
-    aboutText: text(raw?.aboutText, d.aboutText),
-    aboutImageUrl: raw?.aboutImageUrl || undefined,
-    gallery: (raw?.gallery ?? []).filter((g): g is GalleryImage => !!g && !!g.url),
-    menuPdfUrl: text(raw?.menuPdfUrl, d.menuPdfUrl),
-    instagramUrl: raw?.instagramUrl || undefined,
-    facebookUrl: raw?.facebookUrl || undefined,
-    legalName: raw?.legalName || undefined,
-    vatNumber: raw?.vatNumber || undefined,
-  }
-}
-
-/* ---------- Menù, eventi, testimonianze ---------- */
-
-export function getMenu(): Promise<MenuCategory[]> {
-  return safeFetch<MenuCategory[]>(
-    `*[_type == "menuCategory"] | order(order asc){
-      title,
-      "dishes": *[_type == "dish" && category._ref == ^._id && available == true]{
-        name, description, price, tags,
-        "imageUrl": photo.asset->url
-      }
-    }`,
-    {},
-    [],
-  )
-}
-
-// Solo tappe future (da oggi in poi): le vecchie spariscono da sole.
+// Solo eventi futuri (da oggi in poi): i vecchi spariscono da soli.
 export function getEvents(): Promise<EventItem[]> {
-  return safeFetch<EventItem[]>(
-    `*[_type == "event" && visible == true && date >= $today] | order(date asc)[0...20]{
-      title, date, startTime, endTime, location, type
-    }`,
-    { today: todayInRome() },
-    [],
-  )
-}
+  const today = todayInRome()
 
-export function getTestimonials(): Promise<Testimonial[]> {
-  return safeFetch<Testimonial[]>(
-    `*[_type == "testimonial" && visible == true] | order(_createdAt desc)[0...6]{
-      author, eventType, text
+  return safeFetch<EventItem[]>(
+    'eventi',
+    `*[_type == "event" && visible == true && date >= $today] | order(date asc)[0...20]{
+      title, date, startTime, endTime, location
     }`,
-    {},
+    { today },
     [],
+    `visible == true, date >= ${today}`,
   )
 }

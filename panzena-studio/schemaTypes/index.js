@@ -1,7 +1,4 @@
-import menuCategory from './menuCategory'
-import dish from './dish'
 import event from './event'
-import siteSettings from './siteSettings'
-import testimonial from './testimonial'
+import dish from './dish'
 
-export const schemaTypes = [siteSettings, menuCategory, dish, event, testimonial]
+export const schemaTypes = [event, dish]

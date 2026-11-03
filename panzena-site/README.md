@@ -56,47 +56,29 @@ npm run build
 npm start
 ```
 
-## 5. Collegare Sanity (menù ed eventi gestiti dal cliente)
+## 5. Collegare Sanity (piatti famosi ed eventi)
 
-Sanity Studio (il pannello di amministrazione) è un progetto separato
-dal sito — è normale, sono due applicazioni distinte che condividono
-solo i dati.
+Lo Studio (il pannello del cliente) è nella cartella `../panzena-studio`,
+progetto separato: segui il suo README per crearlo e avviarlo. Poi:
 
-1. In una cartella diversa (es. accanto a `panzena-site/`):
-   ```bash
-   npm create sanity@latest -- --project panzena-studio
-   ```
-   Segui il wizard: crea un nuovo progetto, dataset `production`.
-
-2. Sostituisci il contenuto della cartella `schemaTypes/` (o
-   `schemas/`) generata dal wizard con i file che trovi qui in
-   `sanity/schemas/`.
-
-3. Avvia lo studio in locale per testare:
-   ```bash
-   npm run dev
-   ```
-   Di solito parte su `http://localhost:3333`. Da lì puoi già creare
-   categorie, piatti ed eventi di prova.
-
-4. Prendi il **Project ID** (lo trovi in `sanity.config.ts` del
-   progetto studio, o nella dashboard su sanity.io) e mettilo in
+1. Prendi il **Project ID** (è in `panzena-studio/.env`) e mettilo in
    `panzena-site/.env.local`:
    ```
    NEXT_PUBLIC_SANITY_PROJECT_ID=il_tuo_project_id
    NEXT_PUBLIC_SANITY_DATASET=production
    ```
+2. Riavvia `npm run dev`: piatti ed eventi creati nello Studio compaiono in
+   homepage.
 
-5. Riavvia `npm run dev` nel progetto del sito: il menù e gli eventi
-   che hai creato nello studio ora appaiono in homepage.
+Cosa è modificabile da Sanity: **Piatti famosi** (max 6 mostrati) ed **Eventi**
+(solo da oggi in poi). Il testo del team, i contatti e i dati legali stanno in
+`lib/content.ts`.
 
-6. Deploy dello studio (opzionale ma consigliato, così il cliente ci
-   accede da un link invece che da localhost):
-   ```bash
-   npm run deploy
-   ```
-   Ti dà un URL tipo `panzena-studio.sanity.studio` — quello è il
-   pannello che userà il cliente ogni settimana.
+Per verificare il collegamento, controlla il terminale dove gira Next.js
+(`npm run dev`) o i log del deployment: vengono registrati il numero di record
+ricevuti per piatti ed eventi, oppure un avviso con i filtri applicati o
+l'errore Sanity. Questi messaggi sono lato server e non compaiono nella console
+del browser.
 
 ## 6. Collegare Resend (form preventivo)
 
@@ -139,15 +121,21 @@ automatico su Vercel (di solito pronto in meno di un minuto).
 ```
 panzena-site/
 ├── app/
-│   ├── page.tsx              → homepage
-│   ├── layout.tsx            → layout globale, font, metadata
+│   ├── page.tsx              → homepage (4 sezioni)
+│   ├── layout.tsx
 │   ├── globals.css
+│   ├── privacy/              → informativa privacy
 │   └── api/preventivo/       → endpoint che invia l'email del form
 ├── components/
-│   └── ContactForm.tsx
+│   ├── Header.tsx            → un pulsante per sezione
+│   ├── FamousDishes.tsx      → piatti famosi (da Sanity)
+│   ├── Events.tsx            → eventi (da Sanity)
+│   ├── About.tsx             → team (testo in lib/content.ts)
+│   ├── Contact.tsx + ContactForm.tsx → richiesta preventivo
+│   └── Footer.tsx
 ├── lib/
-│   └── sanity.ts             → connessione e query a Sanity
-├── sanity/
-│   └── schemas/              → schema da incollare nel progetto Sanity Studio
+│   ├── sanity.ts             → query a Sanity
+│   ├── content.ts            → testi fissi, contatti, dati legali
+│   └── format.ts
 └── .env.local.example
 ```

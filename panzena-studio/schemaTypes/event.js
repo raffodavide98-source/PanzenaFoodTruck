@@ -1,13 +1,14 @@
 export default {
   name: 'event',
-  title: 'Evento / tappa',
+  title: 'Evento',
   type: 'document',
+  description: 'Sul sito compaiono gli eventi visibili da oggi in poi: quelli passati spariscono da soli.',
   fields: [
     {
       name: 'title',
       title: 'Titolo',
       type: 'string',
-      description: 'Es: Truck a Piazza Matteotti, oppure Catering privato',
+      description: 'Es: Truck a Piazza Matteotti',
       validation: Rule => Rule.required(),
     },
     {
@@ -35,23 +36,11 @@ export default {
       validation: Rule => Rule.required(),
     },
     {
-      name: 'type',
-      title: 'Tipo',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Tappa food truck', value: 'tappa' },
-          { title: 'Evento privato / catering', value: 'catering' },
-        ],
-      },
-      initialValue: 'tappa',
-    },
-    {
       name: 'visible',
       title: 'Visibile sul sito',
       type: 'boolean',
       initialValue: true,
-      description: 'Disattiva se l\'evento è privato e non va mostrato pubblicamente',
+      description: 'Disattiva per nascondere l’evento senza cancellarlo',
     },
   ],
   orderings: [

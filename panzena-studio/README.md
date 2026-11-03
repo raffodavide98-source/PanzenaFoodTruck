@@ -91,12 +91,10 @@ Se builda senza errori, schema e configurazione sono validi.
 ```
 panzena-studio/
 ├── sanity.config.ts     → plugin, titolo dello studio, schema collegati
-├── sanity.cli.ts         → legge project ID / dataset dalle env
+├── sanity.cli.ts        → legge project ID / dataset dalle env
 ├── schemaTypes/
-│   ├── index.ts          → registra tutti gli schema
-│   ├── menuCategory.js
-│   ├── dish.js
-│   ├── event.js
-│   └── siteSettings.js
-└── .env                  → project ID e dataset (non committare)
+│   ├── index.js         → registra gli schema
+│   ├── event.js         → Evento
+│   └── dish.js          → Piatto famoso
+└── .env                 → project ID e dataset (non committare)
 ```

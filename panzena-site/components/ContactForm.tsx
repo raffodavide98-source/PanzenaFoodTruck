@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
-import { EVENT_TYPES } from '@/lib/defaults'
+import { EVENT_TYPES } from '@/lib/content'
 
 const field = 'w-full rounded-lg border border-navy/20 bg-white px-3 py-2.5 text-navy placeholder:text-navy/40'
 const label = 'mb-1 block text-sm font-medium text-navy'

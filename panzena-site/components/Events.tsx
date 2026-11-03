@@ -9,11 +9,7 @@ export default function Events({ events }: { events: EventItem[] }) {
 
         {events.length === 0 ? (
           <p className="max-w-xl text-lg text-navy/70">
-            Al momento non ci sono tappe in programma. Le nuove date compaiono qui: nel frattempo puoi{' '}
-            <a href="#contatti" className="font-semibold text-sea underline underline-offset-4">
-              prenotare il truck per il tuo evento
-            </a>
-            .
+            Al momento non ci sono eventi in programma. Le nuove date compaiono qui.
           </p>
         ) : (
           <ul className="max-w-3xl">
@@ -33,11 +29,6 @@ export default function Events({ events }: { events: EventItem[] }) {
                       {ev.startTime ? ` · ${ev.startTime}${ev.endTime ? `–${ev.endTime}` : ''}` : ''}
                     </p>
                   </div>
-                  {ev.type === 'catering' && (
-                    <span className="ml-auto hidden rounded-full border border-navy/25 px-3 py-1 text-xs font-semibold text-navy sm:inline">
-                      Evento privato
-                    </span>
-                  )}
                 </li>
               )
             })}

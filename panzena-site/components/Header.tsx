@@ -3,10 +3,9 @@
 import { useState } from 'react'
 
 const links = [
-  { href: '#catering', label: 'Catering' },
-  { href: '#menu', label: 'Menù' },
-  { href: '#chi-siamo', label: 'Chi siamo' },
-  { href: '#eventi', label: 'Dove trovarci' },
+  { href: '#piatti', label: 'Piatti famosi' },
+  { href: '#eventi', label: 'Eventi' },
+  { href: '#team', label: 'Il team' },
 ]
 
 export default function Header() {
@@ -25,7 +24,7 @@ export default function Header() {
               {l.label}
             </a>
           ))}
-          <a href="#contatti" className="rounded-full bg-sun px-5 py-2 font-semibold text-navy hover:brightness-95">
+          <a href="#preventivo" className="rounded-full bg-sun px-5 py-2 font-semibold text-navy hover:brightness-95">
             Richiedi preventivo
           </a>
         </div>
@@ -56,7 +55,7 @@ export default function Header() {
             ))}
           </ul>
           <a
-            href="#contatti"
+            href="#preventivo"
             onClick={() => setOpen(false)}
             className="mt-5 block rounded-full bg-sun px-5 py-3 text-center font-semibold text-navy"
           >
