@@ -3,6 +3,7 @@ import Header from '@/components/Header'
 import FamousDishes from '@/components/FamousDishes'
 import Events from '@/components/Events'
 import About from '@/components/About'
+import GoogleReviews from '@/components/GoogleReviews'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 
@@ -17,6 +18,7 @@ export default async function HomePage() {
       <FamousDishes dishes={dishes} />
       <Events events={events} />
       <About />
+      <GoogleReviews />
       <Contact />
       <Footer />
     </main>
