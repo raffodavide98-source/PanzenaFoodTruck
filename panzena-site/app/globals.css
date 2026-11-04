@@ -2,8 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background: #f8f3e9;
+  color: #113b2f;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }
 
 /* Le sezioni non finiscono sotto l'header fisso quando si naviga con i link */
@@ -12,8 +29,14 @@ section[id] {
 }
 
 :focus-visible {
-  outline: 3px solid #2e86ab;
+  outline: 3px solid #3b7a66;
   outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
