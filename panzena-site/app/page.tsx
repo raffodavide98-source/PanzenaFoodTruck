@@ -15,8 +15,8 @@ export default async function HomePage() {
   return (
     <main id="top">
       <Header />
-      <FamousDishes dishes={dishes} />
       <Events events={events} />
+      <FamousDishes dishes={dishes} />
       <About />
       <GoogleReviews />
       <Contact />
