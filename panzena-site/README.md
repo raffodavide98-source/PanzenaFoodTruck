@@ -72,7 +72,9 @@ progetto separato: segui il suo README per crearlo e avviarlo. Poi:
 
 Cosa è modificabile da Sanity: **Piatti famosi** (max 6 mostrati) ed **Eventi**
 (solo da oggi in poi). Il testo del team, i contatti e i dati legali stanno in
-`lib/content.ts`.
+`lib/content.ts`. I link social nel footer si configurano con
+`NEXT_PUBLIC_FACEBOOK_URL`, `NEXT_PUBLIC_INSTAGRAM_URL` e
+`NEXT_PUBLIC_WHATSAPP_URL` in `.env.local`.
 
 Per verificare il collegamento, controlla il terminale dove gira Next.js
 (`npm run dev`) o i log del deployment: vengono registrati il numero di record

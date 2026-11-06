@@ -3,7 +3,8 @@
 
 export const SITE = {
   email: 'info@panzena.it',
-  phone: '', // es. '+39 333 1234567' — se lo compili compaiono i pulsanti Chiama e WhatsApp
+  phone: '+39 348 246 8519',
+  address: 'Via don G. Sannazzari, 7',
   legalName: 'Panzena Food Truck & Catering',
   vatNumber: '', // es. '01234567890' — compare nel footer
 }
