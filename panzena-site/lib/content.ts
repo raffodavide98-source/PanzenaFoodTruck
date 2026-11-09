@@ -7,6 +7,10 @@ export const SITE = {
   address: 'Via don G. Sannazzari, 7',
   legalName: 'Panzena Food Truck & Catering',
   vatNumber: '', // es. '01234567890' — compare nel footer
+  registeredName: '',
+  legalAddress: 'Via don G. Sannazzari, 7',
+  reaNumber: '',
+  pec: '',
 }
 
 export const TEAM = {

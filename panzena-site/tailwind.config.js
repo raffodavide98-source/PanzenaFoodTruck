@@ -15,8 +15,8 @@ module.exports = {
         cream2: '#E8DDC7',
       },
       fontFamily: {
-        display: ['Baloo 2', 'sans-serif'],
-        body: ['Work Sans', 'sans-serif'],
+        display: ['var(--font-display)', 'sans-serif'],
+        body: ['var(--font-body)', 'sans-serif'],
       },
     },
   },

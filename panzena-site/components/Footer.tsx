@@ -138,8 +138,11 @@ export default function Footer() {
 
       <div className="mx-auto mt-10 flex max-w-6xl flex-wrap gap-x-3 gap-y-2 border-t border-cream/15 pt-5 text-xs text-cream/65">
         <span>
-          © {year} {SITE.legalName}
+          © {year} {SITE.registeredName || SITE.legalName}
+          {SITE.legalAddress ? ` · Sede legale: ${SITE.legalAddress}` : ''}
           {SITE.vatNumber ? ` · P.IVA ${SITE.vatNumber}` : ''} · Chiavari (GE)
+          {SITE.reaNumber ? ` · REA ${SITE.reaNumber}` : ''}
+          {SITE.pec ? ` · PEC ${SITE.pec}` : ''}
         </span>
         <a href="/privacy" className="underline underline-offset-4 hover:text-cream">Privacy</a>
       </div>

@@ -24,6 +24,7 @@ export default function Menu({ menu, pdfUrl }: { menu: MenuCategory[]; pdfUrl: s
             Scarica il menù catering (PDF)
           </a>
         </div>
+        <p className="mb-8 text-cream/75">Per allergeni e intolleranze, chiedici prima dell’ordine.</p>
 
         {visible.length === 0 && (
           <p className="text-cream/70">Il menù è in aggiornamento. Scarica il PDF o scrivici per conoscere i piatti del giorno.</p>

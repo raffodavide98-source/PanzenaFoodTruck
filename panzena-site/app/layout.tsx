@@ -1,5 +1,18 @@
 import type { Metadata } from 'next'
+import { Baloo_2, Work_Sans } from 'next/font/google'
 import './globals.css'
+
+const displayFont = Baloo_2({
+  subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-display',
+})
+
+const bodyFont = Work_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-body',
+})
 
 export const metadata: Metadata = {
   title: 'Panzena — Food Truck & Catering a Chiavari e nel Tigullio',
@@ -15,15 +28,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="it" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body className="bg-cream text-navy font-body">{children}</body>
     </html>
   )

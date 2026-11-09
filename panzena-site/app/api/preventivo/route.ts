@@ -12,13 +12,10 @@ export async function POST(req: NextRequest) {
   // Campo trappola: i bot lo compilano, le persone no. Rispondiamo "ok" senza inviare nulla.
   if (body.company) return NextResponse.json({ ok: true })
 
-  const { name, phone, email, message, eventType, date, guests, consent } = body
+  const { name, phone, email, message, eventType, date, guests } = body
 
   if (!name || !phone || !email || !message || !eventType) {
     return NextResponse.json({ error: 'Campi mancanti' }, { status: 400 })
-  }
-  if (!consent) {
-    return NextResponse.json({ error: 'Consenso privacy mancante' }, { status: 400 })
   }
 
   const text = [
@@ -32,10 +29,10 @@ export async function POST(req: NextRequest) {
     message,
   ].join('\n')
 
-  // Senza RESEND_API_KEY la richiesta viene solo stampata nel log: utile in locale.
+  // Never write contact details to application logs when email delivery is unavailable.
   if (!process.env.RESEND_API_KEY) {
-    console.log('Nuova richiesta preventivo (email non inviata, manca RESEND_API_KEY):\n' + text)
-    return NextResponse.json({ ok: true, dev: true })
+    console.error('Invio richiesta preventivo non configurato: RESEND_API_KEY mancante.')
+    return NextResponse.json({ error: 'Servizio di invio non configurato' }, { status: 503 })
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY)

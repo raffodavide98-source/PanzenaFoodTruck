@@ -91,14 +91,6 @@ export default function ContactForm() {
         <input id="company" name="company" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <label className="flex items-start gap-3 text-sm text-navy/80">
-        <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 shrink-0" />
-        <span>
-          Acconsento al trattamento dei dati per ricevere una risposta alla mia richiesta.{' '}
-          <a href="/privacy" className="font-medium text-sea underline underline-offset-2">Informativa privacy</a>
-        </span>
-      </label>
-
       <button
         type="submit"
         disabled={status === 'sending'}
@@ -106,6 +98,10 @@ export default function ContactForm() {
       >
         {status === 'sending' ? 'Invio in corso…' : 'Invia richiesta'}
       </button>
+
+      <p className="text-sm text-navy/75">
+        Inviando il modulo dichiari di aver letto l’<a href="/privacy" className="font-medium text-sea underline underline-offset-2">informativa privacy</a>.
+      </p>
 
       {status === 'error' && (
         <p className="text-sm text-red-700" role="alert">
