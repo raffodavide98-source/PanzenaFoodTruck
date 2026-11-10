@@ -5,7 +5,7 @@ export default function FamousDishes({ dishes }: { dishes: Dish[] }) {
   return (
     <section id="piatti" className="bg-navy2 px-6 py-20 text-cream md:px-8 md:py-28">
       <div className="mx-auto max-w-6xl">
-        <h2 className="mb-12 font-display text-4xl font-extrabold md:text-5xl">I nostri piatti più famosi</h2>
+        <h2 className="mb-12 font-display text-4xl font-extrabold md:text-5xl">Ci conoscono per...</h2>
         <p className="mb-8 text-cream/75">Per allergeni e intolleranze, chiedici prima dell’ordine.</p>
 
         {dishes.length === 0 ? (
