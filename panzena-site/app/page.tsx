@@ -7,6 +7,7 @@ import Offers from '@/components/Offers'
 import GoogleReviews from '@/components/GoogleReviews'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
+import { SHOW_REVIEWS } from '@/lib/feature-flags'
 
 export const revalidate = 60
 
@@ -20,7 +21,7 @@ export default async function HomePage() {
       <FamousDishes dishes={dishes} />
       <About />
       <Offers />
-      <GoogleReviews />
+      {SHOW_REVIEWS && <GoogleReviews />}
       <Contact />
       <Footer />
     </main>

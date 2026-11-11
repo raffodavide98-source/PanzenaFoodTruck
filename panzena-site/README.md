@@ -75,6 +75,10 @@ Cosa è modificabile da Sanity: **Piatti famosi** (max 6 mostrati) ed **Eventi**
 `lib/content.ts`. I link social nel footer si configurano con
 `NEXT_PUBLIC_FACEBOOK_URL`, `NEXT_PUBLIC_INSTAGRAM_URL` e
 `NEXT_PUBLIC_WHATSAPP_URL` in `.env.local`.
+Le recensioni si possono mostrare o nascondere con
+`NEXT_PUBLIC_SHOW_REVIEWS=true`; se la variabile manca o è impostata a
+`false`, non vengono mostrate né in homepage né nel menu. Dopo aver
+modificato la variabile, riavvia il server o esegui un nuovo deploy.
 
 Per verificare il collegamento, controlla il terminale dove gira Next.js
 (`npm run dev`) o i log del deployment: vengono registrati il numero di record

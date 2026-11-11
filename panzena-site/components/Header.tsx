@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { SHOW_REVIEWS } from '@/lib/feature-flags'
 import logoImage from '../photos/logo.jpeg'
 
 const links = [
@@ -9,7 +10,7 @@ const links = [
   { href: '#piatti', label: 'Ci conoscono per...' },
   { href: '#team', label: 'Chi siamo' },
   { href: '#offerte', label: 'Le nostre proposte' },
-  { href: '#recensioni-google', label: 'Recensioni' },
+  ...(SHOW_REVIEWS ? [{ href: '#recensioni-google', label: 'Recensioni' }] : []),
 ]
 
 export default function Header() {

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { SITE } from '@/lib/content'
+import { SHOW_REVIEWS } from '@/lib/feature-flags'
 
 export const metadata: Metadata = { title: 'Privacy — Panzena Food Truck' }
 
@@ -53,17 +54,21 @@ export default function PrivacyPage() {
 
           <h2 className="mt-4 font-display text-2xl font-bold text-navy">Cookie e servizi di terze parti</h2>
           <p>
-            Il sito non utilizza cookie né strumenti di analisi o profilazione. Per mostrare le recensioni, il sito
-            carica il widget Trustindex: quando visualizzi la sezione delle recensioni, il browser contatta i server di
-            Trustindex, che ricevono il tuo indirizzo IP. Consulta la{' '}
-            <a
-              href="https://www.trustindex.io/privacy-policy/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-sea underline underline-offset-4"
-            >
-              informativa privacy di Trustindex
-            </a>.
+            Il sito non utilizza cookie né strumenti di analisi o profilazione.
+            {SHOW_REVIEWS && (
+              <>
+                {' '}Per mostrare le recensioni, il sito carica il widget Trustindex: quando visualizzi la sezione delle
+                recensioni, il browser contatta i server di Trustindex, che ricevono il tuo indirizzo IP. Consulta la{' '}
+                <a
+                  href="https://www.trustindex.io/privacy-policy/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-sea underline underline-offset-4"
+                >
+                  informativa privacy di Trustindex
+                </a>.
+              </>
+            )}
           </p>
 
           <h2 className="mt-4 font-display text-2xl font-bold text-navy">I tuoi diritti</h2>
